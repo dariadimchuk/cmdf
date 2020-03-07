@@ -1,0 +1,5 @@
+# These owners will be the default owners for everything in the repo.
+*       @dariadimchuk
+
+# You can also use email addresses if you prefer.
+docs/*  daria.dimchuk@gmail.com
