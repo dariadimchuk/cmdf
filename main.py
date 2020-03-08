@@ -110,8 +110,7 @@ class MedicationIntentHandler(AbstractRequestHandler):
         
         session_attr = handler_input.attributes_manager.session_attributes
         if not session_attr:
-            session_attr["date"] = key
-            session_attr["time"] = strTime
+            session_attr["date"] = [key, strTime]
         
         # save session attributes as persistent attributes
         handler_input.attributes_manager.persistent_attributes = session_attr
@@ -146,18 +145,53 @@ class CheckMedicationIntentHandler(AbstractRequestHandler):
         
         
         session_attr = handler_input.attributes_manager.persistent_attributes
-        # session_attr = handler_input.attributes_manager.session_attributes
+        #session_attr = handler_input.attributes_manager.session_attributes
         
         
         handler_input.attributes_manager.persistent_attributes = session_attr
         handler_input.attributes_manager.save_persistent_attributes()
         
+        
+        ## This is to get current date
+        # get device id
+        sys_object = handler_input.request_envelope.context.system
+        device_id = sys_object.device.device_id
+
+        # get Alexa Settings API information
+        api_endpoint = sys_object.api_endpoint
+        api_access_token = sys_object.api_access_token
+
+        # construct systems api timezone url
+        url = '{api_endpoint}/v2/devices/{device_id}/settings/System.timeZone'.format(api_endpoint=api_endpoint, device_id=device_id)
+        headers = {'Authorization': 'Bearer ' + api_access_token}
+
+        error_timezone_speech = data["ERROR_TIMEZONE_MSG"]
+        
+        userTimeZone = ""
+        try:
+	        r = requests.get(url, headers=headers)
+	        res = r.json()
+	        logger.info("Device API result: {}".format(str(res)))
+	        userTimeZone = res
+        except Exception:  
+	        handler_input.response_builder.speak(error_timezone_speech)
+	        return handler_input.response_builder.response
+
+        # get the current date with the time
+        currentDT = datetime.now(timezone(userTimeZone))
+        
+        key = currentDT.strftime("%Y/%m/%d")
+        
+        
         speak_output = (data["CHECK_MEDS_NOTTAKEN"])
         
         if session_attr:
-            time = session_attr["time"]
-            speak_output = (data["CHECK_MEDS_CONFIRMED"].format(time))
-        
+            date = session_attr["date"][0]
+            time = session_attr["date"][1]
+            if (key == date):
+                speak_output = (data["CHECK_MEDS_CONFIRMED"].format(time))
+            
+            
         
         return (
             handler_input.response_builder
