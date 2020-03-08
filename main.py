@@ -13,6 +13,7 @@ import locale
 import requests
 import calendar
 import gettext
+import time
 from datetime import datetime
 from pytz import timezone
 from ask_sdk_s3.adapter import S3Adapter
@@ -222,7 +223,31 @@ class MeditationIntentHandler(AbstractRequestHandler):
         #handler_input.attributes_manager.save_persistent_attributes()
 
 
-        speech = data["MEDITATE_TRIGGER"][1]
+        speech = data["MEDITATE_TRIGGER"]
+        handler_input.response_builder.speak(speech)
+        handler_input.response_builder.set_should_end_session(True)
+        return handler_input.response_builder.response
+    
+class PanicAttackIntentHandler(AbstractRequestHandler):
+    """
+    Handler for Panic Attack
+    """
+
+    def can_handle(self, handler_input):
+        return is_intent_name("panic_attack")(handler_input)
+
+    def handle(self, handler_input):
+        data = handler_input.attributes_manager.request_attributes["_"]
+        slots = handler_input.request_envelope.request.intent.slots
+        skill_locale = handler_input.request_envelope.request.locale
+
+
+        # save session attributes as persistent attributes
+        #handler_input.attributes_manager.persistent_attributes = session_attr
+        #handler_input.attributes_manager.save_persistent_attributes()
+
+
+        speech = data["PANIC_ATTACK_TRIGGER"]
         handler_input.response_builder.speak(speech)
         handler_input.response_builder.set_should_end_session(True)
         return handler_input.response_builder.response
@@ -366,6 +391,7 @@ sb.add_request_handler(MeditationIntentHandler())
 sb.add_request_handler(MedicationIntentHandler())
 sb.add_request_handler(CheckMedicationIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
+sb.add_request_handler(PanicAttackIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
 sb.add_request_handler(IntentReflectorHandler()) # make sure IntentReflectorHandler is last so it doesn’t override your custom intent handlers
