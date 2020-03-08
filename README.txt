@@ -1,4 +1,6 @@
-# uBuddy
+ # uBuddy
+Project for cmnd-f hackathon 2020
+
 
 A mental health Amazon Alexa app that helps users work through difficult times in the moment by guiding them through meditation, as well as helps users remember whether they took their medications.
 
