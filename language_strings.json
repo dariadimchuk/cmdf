@@ -1,9 +1,7 @@
 {
     "en": {
-            "WELCOME_MSG": "Hello! Welcome to UBuddy.",
-            "WELCOME_REPROMPT_MSG": "I was born Nov. 6th, 2014. When were you born?",
-            "WELCOME_BACK_MSG": "Welcome back. It looks like there is {} day until your {}th birthday.",
-            "WELCOME_BACK_MSG_plural": "Welcome back. It looks like there are {} days until your {}th birthday.",
+            "WELCOME_MSG": "Hello! Welcome to You Buddy, your mental health assistance app",
+            "WELCOME_REPROMPT_MSG": "You can let me track whether you've taken medicine, as well as have me guide you through meditation or show you resources for when you're stressed or uncomfortable.",
             "HELP_MSG": "You can tell me to begin a meditation exercise, or to have me message a friend if you're stressed out. I can also remind you about your medications. Which one would you like to try?",
             "GOODBYE_MSG": "Goodbye!",
             "REFLECTOR_MSG": "You just triggered {}",
