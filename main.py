@@ -187,10 +187,11 @@ class CheckMedicationIntentHandler(AbstractRequestHandler):
         speak_output = (data["CHECK_MEDS_NOTTAKEN"])
         
         if session_attr:
-            date = session_attr["date"][0]
-            time = session_attr["date"][1]
-            if (key == date):
-                speak_output = (data["CHECK_MEDS_CONFIRMED"].format(time))
+            if "date" in session_attr:
+                date = session_attr["date"][0]
+                time = session_attr["date"][1]
+                if (key == date):
+                    speak_output = (data["CHECK_MEDS_CONFIRMED"].format(time))
             
             
         
@@ -216,17 +217,17 @@ class MeditationIntentHandler(AbstractRequestHandler):
         data = handler_input.attributes_manager.request_attributes["_"]
         slots = handler_input.request_envelope.request.intent.slots
         skill_locale = handler_input.request_envelope.request.locale
-
-
-        # save session attributes as persistent attributes
-        #handler_input.attributes_manager.persistent_attributes = session_attr
-        #handler_input.attributes_manager.save_persistent_attributes()
-
-
+        
+        
         speech = data["MEDITATE_TRIGGER"]
         handler_input.response_builder.speak(speech)
         handler_input.response_builder.set_should_end_session(True)
         return handler_input.response_builder.response
+    
+    
+    
+    
+    
     
 class PanicAttackIntentHandler(AbstractRequestHandler):
     """
@@ -242,15 +243,101 @@ class PanicAttackIntentHandler(AbstractRequestHandler):
         skill_locale = handler_input.request_envelope.request.locale
 
 
-        # save session attributes as persistent attributes
-        #handler_input.attributes_manager.persistent_attributes = session_attr
-        #handler_input.attributes_manager.save_persistent_attributes()
-
-
         speech = data["PANIC_ATTACK_TRIGGER"]
+        reprompt = data["PANIC_ATTACK_REPROMPT"]
+        
+        # save session attributes as persistent attributes
+        session_attr = handler_input.attributes_manager.session_attributes
+        if not session_attr:
+            session_attr["confirm_meditation"] = True
+        
+        
+        handler_input.attributes_manager.persistent_attributes = session_attr
+        handler_input.attributes_manager.save_persistent_attributes()
+        
+        
+        return (
+            handler_input.response_builder
+                .speak(speech)
+                .ask(reprompt)
+                .response
+        )
+        
+    
+class YesIntentHandler(AbstractRequestHandler):
+    
+    def can_handle(self, handler_input):
+        return is_intent_name("AMAZON.YesIntent")(handler_input)
+    
+    def handle(self, handler_input):
+        data = handler_input.attributes_manager.request_attributes["_"]
+        slots = handler_input.request_envelope.request.intent.slots
+        skill_locale = handler_input.request_envelope.request.locale
+        
+        
+        speech = "I'm not sure what you're saying yes to..."
+        
+        session_attr = handler_input.attributes_manager.session_attributes
+        if session_attr:
+            if "confirm_meditation" in session_attr:
+                prompted = session_attr["confirm_meditation"]
+                if (prompted == True):
+                    speech = data["PANIC_ATTACK_FOLLOW_UP_A"]
+        
+        
         handler_input.response_builder.speak(speech)
         handler_input.response_builder.set_should_end_session(True)
         return handler_input.response_builder.response
+
+
+
+class NoIntentHandler(AbstractRequestHandler):
+    
+    def can_handle(self, handler_input):
+        return is_intent_name("AMAZON.NoIntent")(handler_input)
+    
+    def handle(self, handler_input):
+        data = handler_input.attributes_manager.request_attributes["_"]
+        slots = handler_input.request_envelope.request.intent.slots
+        skill_locale = handler_input.request_envelope.request.locale
+        
+        speech = "I'm not sure what you're saying no to..."
+        
+        session_attr = handler_input.attributes_manager.session_attributes
+        if session_attr:
+            if "confirm_meditation" in session_attr:
+                prompted = session_attr["confirm_meditation"]
+                if (prompted == True) :
+                    speech = data["PANIC_ATTACK_FOLLOW_UP_NO"]
+
+        
+        handler_input.response_builder.speak(speech)
+        handler_input.response_builder.set_should_end_session(True)
+        return handler_input.response_builder.response
+
+
+
+
+
+class ResourcesIntentHandler(AbstractRequestHandler):
+    """
+    Handler for finding resources
+    """
+
+    def can_handle(self, handler_input):
+        return is_intent_name("resources")(handler_input)
+
+    def handle(self, handler_input):
+        data = handler_input.attributes_manager.request_attributes["_"]
+        slots = handler_input.request_envelope.request.intent.slots
+        skill_locale = handler_input.request_envelope.request.locale
+
+
+        speech = "This is what I found online"
+        handler_input.response_builder.speak(speech)
+        handler_input.response_builder.set_should_end_session(True)
+        return handler_input.response_builder.response
+
 
 
 
@@ -392,6 +479,9 @@ sb.add_request_handler(MedicationIntentHandler())
 sb.add_request_handler(CheckMedicationIntentHandler())
 sb.add_request_handler(HelpIntentHandler())
 sb.add_request_handler(PanicAttackIntentHandler())
+sb.add_request_handler(YesIntentHandler())
+sb.add_request_handler(NoIntentHandler())
+sb.add_request_handler(ResourcesIntentHandler())
 sb.add_request_handler(CancelOrStopIntentHandler())
 sb.add_request_handler(SessionEndedRequestHandler())
 sb.add_request_handler(IntentReflectorHandler()) # make sure IntentReflectorHandler is last so it doesn’t override your custom intent handlers

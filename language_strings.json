@@ -5,14 +5,16 @@
             "HELP_MSG": "You can tell me to begin a meditation exercise, or to have me message a friend if you're stressed out. I can also remind you about your medications. Which one would you like to try?",
             "GOODBYE_MSG": "Goodbye!",
             "REFLECTOR_MSG": "You just triggered {}",
-            "ERROR_MSG": "Sorry, I didn't understand that.",
+            "ERROR_MSG": "Sorry, I didn't understand.",
             "ERROR_TIMEZONE_MSG": "I can't determine your timezone. Please check your device settings and make sure a timezone was selected. After that please reopen the skill and try again!",
             "MEDITATE_TRIGGER": "Here are some meditation resources I found.",
             "MEDICATION_TRIGGER":"Good job! I'll remember you took your medicine at {}.",
             "CHECK_MEDS_CONFIRMED": "Yes, you took your medication at {} today",
             "CHECK_MEDS_NOTTAKEN": "You forgot to take your medication today. Please take it, and let me know when you have.",
-            "PANIC_ATTACK_TRIGGER": "<speak>Take a few deep breaths <break time='1s'/>Inhale<break time='3s'/>exhale</speak>",
-            "PANIC_ATTACK_FOLLOW_UP_A": "<speak>Ok. Try naming 5 things you can see <break time='2s'/>4 things you can hear <break time='2s'/>3 things you can touch<break time='2s'/>2 things you can smell<break time='2s'/>and 1 thing you can taste. <break time='2s'/> Good job!</speak>"
+            "PANIC_ATTACK_TRIGGER": "<speak>Take a few deep breaths <break time='0.3s'/>Inhale.<break time='1s'/>Exhale. Would you like to do a meditation exercise?</speak>",
+            "PANIC_ATTACK_REPROMPT": "So would you like that exercise?",
+            "PANIC_ATTACK_FOLLOW_UP_A": "<speak>Ok. Try naming 5 things you can see <break time='2s'/>4 things you can hear <break time='2s'/>3 things you can touch<break time='2s'/>2 things you can smell<break time='2s'/>and 1 thing you can taste. <break time='2s'/> Good job! I hope you feel better soon.</speak>",
+            "PANIC_ATTACK_FOLLOW_UP_NO": "Ok, I understand. I hope you feel better soon."
             
     }
 }
